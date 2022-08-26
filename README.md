@@ -16,8 +16,6 @@ $ npm start
 =====>>> Step: checking for schedules
 [{"date":"2023-10-11","business_day":true}]
 =====>>> Step: sending an email to schedule for 2023-10-11
-=====>>> Step: starting process with 247 tries left
-=====>>> Step: checking for schedules
 ...
 ```
 
