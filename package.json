@@ -1,0 +1,25 @@
+{
+  "name": "us-visa-appointment-notifier",
+  "version": "1.0.0",
+  "description": "This is to help me in getting notified when there's an earliest appointment slot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theoomoregbee/US-visa-appointment-notifier.git"
+  },
+  "keywords": [
+    "USA",
+    "visa",
+    "appointment",
+    "scheduling"
+  ],
+  "author": "Theophilus Omoregbee <theo4u@ymail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/theoomoregbee/US-visa-appointment-notifier/issues"
+  },
+  "homepage": "https://github.com/theoomoregbee/US-visa-appointment-notifier#readme"
+}
