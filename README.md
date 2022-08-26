@@ -15,16 +15,14 @@ $ npm start
 =====>>> Step: starting process with 248 tries left
 =====>>> Step: checking for schedules
 [{"date":"2023-10-11","business_day":true}]
+=====>>> Step: sending an email to schedule for 2023-10-11
 =====>>> Step: starting process with 247 tries left
 =====>>> Step: checking for schedules
-[]
-=====>>> Step: starting process with 246 tries left
-=====>>> Step: checking for schedules
-[]
-=====>>> Step: starting process with 245 tries left
-=====>>> Step: checking for schedules
-[]
+...
 ```
+
+![email notification sample](./email-screen-shot.png)
+
 
 ## How it works
 
@@ -32,6 +30,8 @@ $ npm start
 * checks for schedules by day 
 * If there's a date before your initial appointment, it notifies you via email
 * If no dates found, the process waits for set amount of seconds to cool down before restarting and will stop when it reaches the set max retries.
+
+> see `config.js` or `.env.example` for values you can configure
 
 ## Configuration
 

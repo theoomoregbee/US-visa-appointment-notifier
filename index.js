@@ -31,7 +31,7 @@ const login = async (page) => {
 
 const notifyMe = async (earliestDate) => {
   const formattedDate = format(earliestDate, 'dd-MM-yyyy');
-  logStep("sending an email to schedule for", formattedDate);
+  logStep(`sending an email to schedule for ${formattedDate}`);
   await sendEmail({
     subject: `We found an earliest date ${formattedDate}`,
     text: `Hurry and schedule for ${formattedDate} before it is taken.`
@@ -82,8 +82,8 @@ const process = async (browser) => {
   }
 
   const earliestDate = await checkForSchedules(page);
-  if(isBefore(earliestDate, parseISO(NOTIFY_ON_DATE_BEFORE))){
-    await notifyMe(earliest);
+  if(earliestDate && isBefore(earliestDate, parseISO(NOTIFY_ON_DATE_BEFORE))){
+    await notifyMe(earliestDate);
   }
 
   await delay(NEXT_SCHEDULE_POLL)
