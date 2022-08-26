@@ -7,10 +7,10 @@ module.exports = {
   siteInfo: {
     COUNTRY_CODE: process.env.COUNTRY_CODE || 'en-ca',
     SCHEDULE_ID: process.env.SCHEDULE_ID,
-    FACILTITY_ID: process.env.FACILTITY_ID,
+    FACILITY_ID: process.env.FACILITY_ID,
 
     get APPOINTMENTS_JSON_URL(){
-      return `https://ais.usvisa-info.com/${this.COUNTRY_CODE}/niv/schedule/${this.SCHEDULE_ID}/appointment/days/${this.FACILTITY_ID}.json?appointments%5Bexpedite%5D=false`
+      return `https://ais.usvisa-info.com/${this.COUNTRY_CODE}/niv/schedule/${this.SCHEDULE_ID}/appointment/days/${this.FACILITY_ID}.json?appointments%5Bexpedite%5D=false`
     },
 
     get LOGIN_URL () {

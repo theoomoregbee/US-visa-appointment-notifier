@@ -49,7 +49,7 @@ const checkForSchedules = async (page) => {
 
   try{
     console.log(bodyText);
-    const parsedBody =  JSON.stringify(bodyText);
+    const parsedBody =  JSON.parse(bodyText);
 
     if(!Array.isArray(parsedBody)) {
       throw "Failed to parse dates, probably because you are not logged in";
