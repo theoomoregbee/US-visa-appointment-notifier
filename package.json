@@ -4,7 +4,8 @@
   "description": "This is to help me in getting notified when there's an earliest appointment slot",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -21,5 +22,11 @@
   "bugs": {
     "url": "https://github.com/theoomoregbee/US-visa-appointment-notifier/issues"
   },
-  "homepage": "https://github.com/theoomoregbee/US-visa-appointment-notifier#readme"
+  "homepage": "https://github.com/theoomoregbee/US-visa-appointment-notifier#readme",
+  "dependencies": {
+    "date-fns": "^2.29.2",
+    "dotenv": "^16.0.1",
+    "mailgun.js": "^8.0.0",
+    "puppeteer": "^16.2.0"
+  }
 }
