@@ -33,7 +33,7 @@ const notifyMe = async (earliestDate) => {
   const formattedDate = format(earliestDate, 'dd-MM-yyyy');
   logStep(`sending an email to schedule for ${formattedDate}`);
   await sendEmail({
-    subject: `We found an earliest date ${formattedDate}`,
+    subject: `We found an earlier date ${formattedDate}`,
     text: `Hurry and schedule for ${formattedDate} before it is taken.`
   })
 }
