@@ -12,7 +12,7 @@ const login = async (page) => {
   logStep('logging in');
   await page.goto(siteInfo.LOGIN_URL);
 
-  const form = await page.$("form#new_user");
+  const form = await page.$("form#sign_in_form");
 
   const email = await form.$('input[name="user[email]"]');
   const password = await form.$('input[name="user[password]"]');
