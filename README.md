@@ -40,6 +40,10 @@ copy the example configuration file exampe in `.env.example`, rename the copied 
 You can create a free account with https://www.mailgun.com/ which should be sufficient and use the provided sandbox domain on your dashboard. The `MAILGUN_API_KEY` can be found in your Mailgun dashboard, it starts with `key-xxxxxx`. 
 
 
+## FAQ
+
+* How do I get my facility ID - https://github.com/theoomoregbee/US-visa-appointment-notifier/issues/3
+
 ## How to use it
 
 * clone the repo 
