@@ -43,6 +43,7 @@ You can create a free account with https://www.mailgun.com/ which should be suff
 ## FAQ
 
 * How do I get my facility ID - https://github.com/theoomoregbee/US-visa-appointment-notifier/issues/3
+* How do I get my schedule ID - https://github.com/theoomoregbee/US-visa-appointment-notifier/issues/7#issuecomment-1372565292
 
 ## How to use it
 
