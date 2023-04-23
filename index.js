@@ -40,6 +40,10 @@ const notifyMe = async (earliestDate) => {
 
 const checkForSchedules = async (page) => {
   logStep('checking for schedules');
+  await page.setExtraHTTPHeaders({
+    'Accept': 'application/json, text/javascript, */*; q=0.01',
+    'X-Requested-With': 'XMLHttpRequest'
+  });
   await page.goto(siteInfo.APPOINTMENTS_JSON_URL);
 
   const originalPageContent = await page.content();
