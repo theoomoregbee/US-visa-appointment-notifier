@@ -10,10 +10,8 @@ Changes:
 - Push notifications via PushOver
 - Notifications sent when slot is found, rescheduling success or failure, cooldown started or finished.
 - Rescheduling. (Works as per 01 May 2023. Would definitely break in the future)
-— Appointment date updates in your .env file, so the script would continue to try moving your appointment earlier until you stop it or the retry limit reaches 0
-— There are 4 notifications: a) New timeslot found b) Rescheduling success c) Rescheduling failure d) Cooldown start/finish. a, b, c marked as important, so the might override your phone's 'do not disturb' mode.
-
-
+- Appointment date updates in your .env file, so the script would continue to try moving your appointment earlier until you stop it or the retry limit reaches 0
+- There are 4 notifications: a) New time-slot found b) Rescheduling success c) Rescheduling failure d) Cooldown start/finish. a, b, c marked as important, so the might override your phone's 'do not disturb' mode.
 
 ```
 $ npm start
