@@ -60,7 +60,7 @@ const notifyMe = async (topic, earliestDate) => {
       subject = `Rescheduled to ${formattedDate}`;
       body = `Your new appointment date is ${formattedDate}`;
       priority = 1;
-      logStep(`sending an notifications for rescudule success: ${formattedDate}`);
+      logStep(`sending an notifications for reschedule success: ${formattedDate}`);
 
       break;
     case "newSlotAvailable":
@@ -74,7 +74,7 @@ const notifyMe = async (topic, earliestDate) => {
       subject = `Auto rescheduling failed`;
       body = `Try to reschedule manually ${formattedDate}`;
       priority = 0;
-      logStep(`sending an notifications for rescudule failure ${formattedDate}`);
+      logStep(`sending an notifications for reschedule failure ${formattedDate}`);
 
       
       break;
@@ -111,12 +111,6 @@ const notifyMe = async (topic, earliestDate) => {
 }
 const reschedule = async (page, earliestDate) => {
   
-  var formattedDate;
-  if (earliestDate) {
-    formattedDate = format(earliestDate, 'yyyy-MM-dd');
-    logStep(`sending an notifications for rescudule failure ${formattedDate}`);
-  }
-      
 
   try {
     const targetPage = page;
@@ -181,7 +175,7 @@ const reschedule = async (page, earliestDate) => {
           const timeSelect = await page.$('select[name="appointments[consulate_appointment][time]"]');
           await timeSelect.click({ delay: 1000 });
         } catch (err) {
-          console.log(`237: error: ${err}`)
+          dumpError(err);
         }
         await delay(2500);
         try {
@@ -199,7 +193,6 @@ const reschedule = async (page, earliestDate) => {
           const resheduleBtn = await page.$(selectors.RESCHEDULE_BTN);
           resheduleBtn.click();
         } catch (err) {
-          console.log(`Reschedule button error: ${err}`);
           dumpError(err)
         }
         try {
@@ -212,7 +205,6 @@ const reschedule = async (page, earliestDate) => {
             },
           });
         } catch (err) {
-          console.log(`confirm button error: ${err}`)
           dumpError(err);
         }
         break;
@@ -225,7 +217,7 @@ const reschedule = async (page, earliestDate) => {
     logStep(`Reschedule success: ${format(earliestDate, 'yyyy-MM-dd')} `);
     return true
   } catch (error) {
-    console.log(`Reschedule failed: ${error}`);
+    logStep(`Reschedule failed: ${error}`);
     dumpError(error);
     await notifyMe("rescheduleFailure", earliestDate);
   }
@@ -239,7 +231,8 @@ const checkForSchedules = async (page) => {
   try {
     await page.goto(siteInfo.APPOINTMENTS_JSON_URL);
   } catch (err) {
-    console.log(err)
+    logStep("Error getting JSON dates object");
+    dumpError(err);
   }
   const originalPageContent = await page.content();
   const bodyText = await page.evaluate(() => {
@@ -252,7 +245,7 @@ const checkForSchedules = async (page) => {
       throw "Failed to parse dates, probably because you are not logged in";
     } else {
       if (parsedBody.length > 0) {
-        console.log(`Earliest: ${parsedBody[0].date}`);
+        logStep(`Earliest: ${parsedBody[0].date}`);
         const dates = parsedBody.map(item => parseISO(item.date));
         const [earliest] = dates.sort(compareAsc)
         return earliest;
@@ -267,14 +260,16 @@ const checkForSchedules = async (page) => {
   } catch (err) {
     console.log(`catch called: ${err}`);
     console.log("Unable to parse page JSON content", originalPageContent);
-    console.error(err);
+    dumpError(err);
+
     isLoggedIn = false;
   }
 }
 const process = async (browser) => {
   logStep(`starting process with ${maxTries} tries left @ ${new Date().toLocaleString()}`);
   if (maxTries-- <= 0) {
-    console.log('Reached Max tries')
+    logStep('Reached Max tries');
+
     return
   }
   const page = await browser.newPage();
@@ -285,6 +280,9 @@ const process = async (browser) => {
   if (earliestDate && isBefore(earliestDate, parseISO(NOTIFY_ON_DATE_BEFORE))) {
     await notifyMe("newSlotAvailable", earliestDate);
     await reschedule(page, earliestDate);
+  } else {
+    logStep(`No earlier timeslots ¯|_(ツ)_|¯ `);
+
   }
   if (!cooldownMode) {
     await delay(NEXT_SCHEDULE_POLL)

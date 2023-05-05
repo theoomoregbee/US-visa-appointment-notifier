@@ -8,23 +8,29 @@ This version would not only notify you when a time slot found, but also would tr
 Changes:
 
 - Push notifications via PushOver
-- Notifications sent when slot is found, rescheduling success or failure, cooldown started.
-- Rescheduling. (Works as per 01 May 2023. Would definitely break in the future) 
+- Notifications sent when slot is found, rescheduling success or failure, cooldown started or finished.
+- Rescheduling. (Works as per 01 May 2023. Would definitely break in the future)
+— Appointment date updates in your .env file, so the script would continue to try moving your appointment earlier until you stop it or the retry limit reaches 0
+— There are 4 notifications: a) New timeslot found b) Rescheduling success c) Rescheduling failure d) Cooldown start/finish. a, b, c marked as important, so the might override your phone's 'do not disturb' mode.
+
 
 
 ```
 $ npm start
-=====>>> Step: starting process with 250 tries left
+
+> us-visa-appointment-notifier@1.0.0 start
+> node index.js
+
+=====>>> Step: starting process with 1000 tries left @ 1/1/1970, 1:00:00 AM
 =====>>> Step: logging in
 =====>>> Step: checking for schedules
-[{"date":"2023-02-08","business_day":true},{"date":"2023-04-26","business_day":true},{"date":"2023-10-11","business_day":true}]
-=====>>> Step: starting process with 249 tries left
-=====>>> Step: checking for schedules
-[{"date":"2023-04-26","business_day":true},{"date":"2023-10-11","business_day":true}]
-=====>>> Step: starting process with 248 tries left
-=====>>> Step: checking for schedules
-[{"date":"2023-10-11","business_day":true}]
-=====>>> Step: sending an email to schedule for 2023-10-11
+Earliest: 2024-09-24
+=====>>> Step: sending an notifications: There is a slot on 2024-09-24
+=====>>> Step: about to click the day
+=====>>> Step: The day clicked
+optionValue: 09:00
+=====>>> Step: sending an notifications for rescudule success: 2024-09-24
+=====>>> Step: Reschedule success: 2024-09-24 
 ...
 ```
 
