@@ -1,2 +1,4 @@
 .env
+.nova
 node_modules/
+.eslintrc.json

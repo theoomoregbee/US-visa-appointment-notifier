@@ -27,6 +27,10 @@
     "date-fns": "^2.29.2",
     "dotenv": "^16.0.1",
     "mailgun.js": "^8.0.0",
-    "puppeteer": "^16.2.0"
+    "puppeteer": "^16.2.0",
+    "pushover-notifications": "^1.2.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.39.0"
   }
 }

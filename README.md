@@ -1,6 +1,15 @@
 # US-visa-appointment-notifier
 
-This is just a script I put together to check and notify me via email ([MailGun](https://www.mailgun.com/)) when there's an earlier date before my initial appointment date. It doesn't handle **rescheduling**. 
+
+This is forked from [theoomoregbee/US-visa-appointment-notifier](https://github.com/theoomoregbee/US-visa-appointment-notifier) Thanks [theoomoregbee](https://github.com/theoomoregbee) for creating it!
+
+This version would not only notify you when a time slot found, but also would try to reschedule the appointment for you.
+
+Changes:
+
+- Push notifications via PushOver
+- Notifications sent when slot is found, rescheduling success or failure, cooldown started.
+- Rescheduling. (Works as per 01 May 2023. Would definitely break in the future) 
 
 
 ```
@@ -25,10 +34,10 @@ $ npm start
 ## How it works
 
 * Logs you into the portal
-* checks for schedules by day 
-* If there's a date before your initial appointment, it notifies you via email
-* If no dates found, the process waits for set amount of seconds to cool down before restarting and will stop when it reaches the set max retries.
-
+* Checks for schedules by day 
+* If there's a date before your initial appointment, it notifies you via email and tries to reschedule the appointment for you
+* If no dates found, the process waits for set amount of seconds and will stop when it reaches the set max retries.
+* Once you get temporarily banned, the cooldown period would start.
 > see `config.js` or `.env.example` for values you can configure
 
 ## Configuration
@@ -38,6 +47,11 @@ copy the example configuration file exampe in `.env.example`, rename the copied 
 ### MailGun config values 
 
 You can create a free account with https://www.mailgun.com/ which should be sufficient and use the provided sandbox domain on your dashboard. The `MAILGUN_API_KEY` can be found in your Mailgun dashboard, it starts with `key-xxxxxx`. You'll need to add authorised recipients to your sandbox domain for free accounts
+
+### PushOver config values 
+
+Create a free trial account with https://pushover.net/. Create a new app at https://pushover.net/apps/build and copy API Token/Key to PUSHOVER_TOKEN at .env. Put your user_key to PUSHOVER_USER.
+
 
 
 ## FAQ
