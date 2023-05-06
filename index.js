@@ -246,8 +246,10 @@ const checkForSchedules = async (page) => {
     } else {
       if (parsedBody.length > 0) {
         
-        await notifyMe("cooldownFinished");
-        cooldownMode = false;
+        if (cooldownMode){
+          await notifyMe("cooldownFinished");
+          cooldownMode = false;
+        }
         
         logStep(`Earliest: ${parsedBody[0].date}`);
         const dates = parsedBody.map(item => parseISO(item.date));
