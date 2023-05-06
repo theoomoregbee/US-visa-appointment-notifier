@@ -79,20 +79,20 @@ const notifyMe = async (topic, earliestDate) => {
       
       break;
     case "cooldownStarted":
-      subject = `Cooldown started`;
+      subject = `Cooldown mode started`;
       var startDate = new Date();
       var time = startDate.getTime(); //convert to milliseconds since epoch
       var newTime = time + parseInt(COOLDOWN_TIMEOUT)
       var nextAttemptAt = new Date(newTime).toLocaleString()
-      body = `The next attempt in ${nextAttemptAt}`;
+      body = `The next attempt at ${nextAttemptAt}. Polling pace decreased. I'll notify you once ban is over.`;
       priority = 0;
       
       logStep(`sending an notifications: Cooldown started ${nextAttemptAt}`);
 
       break;
     case "cooldownFinished":
-      subject = `Cooldown finished`;
-      body = `Let's find a slot`;
+      subject = `Cooldown mode finished`;
+      body = `Polling pace is back to regular`;
       priority = 0;
       logStep(`sending an notifications: Cooldown finished`);
       break;
@@ -245,10 +245,16 @@ const checkForSchedules = async (page) => {
       throw "Failed to parse dates, probably because you are not logged in";
     } else {
       if (parsedBody.length > 0) {
+        
+        await notifyMe("cooldownFinished");
+        cooldownMode = false;
+        
         logStep(`Earliest: ${parsedBody[0].date}`);
         const dates = parsedBody.map(item => parseISO(item.date));
         const [earliest] = dates.sort(compareAsc)
         return earliest;
+        
+        
       } else {
         logStep("No slots available, starting cooldown");
 
@@ -295,8 +301,7 @@ const process = async (browser) => {
 
     logStep("Cooldown passed");
 
-    await notifyMe("cooldownFinished");
-    cooldownMode = false;
+
   }
   await process(browser)
 }
