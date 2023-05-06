@@ -22,8 +22,9 @@ const {
   NEXT_SCHEDULE_POLL,
   MAX_NUMBER_OF_POLL,
   COOLDOWN_TIMEOUT,
-  NOTIFY_ON_DATE_BEFORE
+  NOTIFY_ON_DATE_BEFORE_ENV
 } = require('./config');
+var notifyOn = NOTIFY_ON_DATE_BEFORE_ENV;
 let isLoggedIn = false;
 let maxTries = MAX_NUMBER_OF_POLL
 var cooldownMode = false;
@@ -213,7 +214,8 @@ const reschedule = async (page, earliestDate) => {
     await delay(500);
     await notifyMe("rescheduleSuccess", earliestDate);
     //update env saved date
-    setEnvValue("NOTIFY_ON_DATE_BEFORE", format(earliestDate, 'yyyy-MM-dd'));
+    setEnvValue("NOTIFY_ON_DATE_BEFORE_ENV", format(earliestDate, 'yyyy-MM-dd'));
+    notifyOn = format(earliestDate, 'yyyy-MM-dd');
     logStep(`Reschedule success: ${format(earliestDate, 'yyyy-MM-dd')} `);
     return true
   } catch (error) {
@@ -285,7 +287,7 @@ const process = async (browser) => {
     isLoggedIn = await login(page);
   }
   const earliestDate = await checkForSchedules(page);
-  if (earliestDate && isBefore(earliestDate, parseISO(NOTIFY_ON_DATE_BEFORE))) {
+  if (earliestDate && isBefore(earliestDate, parseISO(notifyOn))) {
     await notifyMe("newSlotAvailable", earliestDate);
     await reschedule(page, earliestDate);
   } else {
