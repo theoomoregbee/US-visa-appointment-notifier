@@ -265,6 +265,7 @@ const checkForSchedules = async (page) => {
         isLoggedIn = false;
         cooldownMode = true;
         await notifyMe("cooldownStarted");
+        await page.close();
       }
     }
   } catch (err) {
@@ -282,7 +283,11 @@ const process = async (browser) => {
 
     return
   }
-  const page = await browser.newPage();
+  
+  let page = null;
+  const pages = await browser.pages();
+          page = pages.length ? pages[0] : await browser.newPage();
+  
   if (!isLoggedIn) {
     isLoggedIn = await login(page);
   }

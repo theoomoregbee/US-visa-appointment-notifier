@@ -1,3 +1,4 @@
+const url = require('url')
 module.exports = {
   
   selectors: {
@@ -29,7 +30,7 @@ module.exports = {
     FACILITY_ID: process.env.FACILITY_ID,
 
     get APPOINTMENTS_JSON_URL(){
-      return `https://ais.usvisa-info.com/${this.COUNTRY_CODE}/niv/schedule/${this.SCHEDULE_ID}/appointment/days/${this.FACILITY_ID}.json?appointments%5Bexpedite%5D=false`
+      return process.env.NODE_ENV === 'prod' ?  `https://ais.usvisa-info.com/${this.COUNTRY_CODE}/niv/schedule/${this.SCHEDULE_ID}/appointment/days/${this.FACILITY_ID}.json?appointments%5Bexpedite%5D=false` : url.pathToFileURL('./test_data.json')
     },
 
     get LOGIN_URL () {
@@ -45,7 +46,7 @@ module.exports = {
   NEXT_SCHEDULE_POLL: process.env.NEXT_SCHEDULE_POLL || 30_000, // default to 30 seconds
   MAX_NUMBER_OF_POLL: process.env.MAX_NUMBER_OF_POLL || 250, // number of polls before stopping
   COOLDOWN_TIMEOUT: process.env.COOLDOWN_TIMEOUT || 18_000_000, //5 hours
-  NOTIFY_ON_DATE_BEFORE: process.env.NOTIFY_ON_DATE_BEFORE, // in ISO format i.e YYYY-MM-DD
+  NOTIFY_ON_DATE_BEFORE_ENV: process.env.NOTIFY_ON_DATE_BEFORE_ENV, // in ISO format i.e YYYY-MM-DD
 
   NOTIFY_EMAILS: process.env.NOTIFY_EMAILS, // comma separated list of emails
   mailgun: {
