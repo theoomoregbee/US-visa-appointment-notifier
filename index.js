@@ -263,8 +263,10 @@ const checkForSchedules = async (page) => {
         logStep("No slots available, starting cooldown");
 
         isLoggedIn = false;
+        if (!cooldownMode){
+          await notifyMe("cooldownStarted");
+        }
         cooldownMode = true;
-        await notifyMe("cooldownStarted");
         await page.close();
       }
     }
@@ -320,7 +322,8 @@ const process = async (browser) => {
   if (os.platform() == 'linux') {
      browser = await puppeteer.launch({
       executablePath: '/usr/bin/chromium-browser',
-      headless: true
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'] //This line for running as root in docker. Remove it if you run app differently
     });
   } else {
      browser = await puppeteer.launch({
