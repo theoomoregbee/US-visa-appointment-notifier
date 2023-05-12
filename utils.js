@@ -44,7 +44,9 @@ const sendPush = async (params) => {
     
     p.send(msg, function(err, result) {
         try {
-            console.log(result)
+            console.log()
+            logStep("Notification sent: " + result);
+
         } catch (err) {
             console.log(err);
         }

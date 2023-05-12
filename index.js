@@ -30,7 +30,7 @@ let maxTries = MAX_NUMBER_OF_POLL
 var cooldownMode = false;
 const timeout = 5000;
 const login = async (page) => {
-  logStep('logging in');
+  logStep('Logging in');
   try {
     await page.goto(siteInfo.LOGIN_URL);
     const form = await page.$(selectors.SIGN_IN_FORM);
@@ -61,21 +61,21 @@ const notifyMe = async (topic, earliestDate) => {
       subject = `Rescheduled to ${formattedDate}`;
       body = `Your new appointment date is ${formattedDate}`;
       priority = 1;
-      logStep(`sending an notification for reschedule success: ${formattedDate}`);
+      logStep(`Sending a notification for reschedule success: ${formattedDate}`);
 
       break;
     case "newSlotAvailable":
       subject = `New date available: ${formattedDate}`;
       body = `Trying to reschedule...`;
       priority = 1;
-      logStep(`sending an notification: There is a slot on ${formattedDate}`);
+      logStep(`Sending a notification: There is a slot on ${formattedDate}`);
 
       break;
     case "rescheduleFailure":
       subject = `Auto rescheduling failed`;
       body = `Try to reschedule manually ${formattedDate}`;
       priority = 0;
-      logStep(`sending an notification for reschedule failure ${formattedDate}`);
+      logStep(`Sending a notification for reschedule failure ${formattedDate}`);
 
       
       break;
@@ -88,14 +88,14 @@ const notifyMe = async (topic, earliestDate) => {
       body = `The next attempt at ${nextAttemptAt}. Polling pace decreased. I'll notify you once ban is over.`;
       priority = 0;
       
-      logStep(`sending an notification: Cooldown started ${nextAttemptAt}`);
+      logStep(`Sending a notification: Cooldown started ${nextAttemptAt}`);
 
       break;
     case "cooldownFinished":
       subject = `Cooldown mode finished`;
       body = `Polling pace is back to regular`;
       priority = 0;
-      logStep(`sending an notification: Cooldown finished`);
+      logStep(`Sending a notification: Cooldown finished`);
       break;
     default:
       // code block
@@ -164,7 +164,7 @@ const reschedule = async (page, earliestDate) => {
         //If there is an available day — proceed
         await delay(500);
         var theDay = await page.waitForSelector(selectors.DATE_PICKER_THE_DAY);
-        logStep("about to click the day");
+        logStep("About to click the day");
         await theDay.click({
           offset: {
             x: 2,
@@ -225,7 +225,7 @@ const reschedule = async (page, earliestDate) => {
   }
 }
 const checkForSchedules = async (page) => {
-  logStep('checking for schedules');
+  logStep('Checking for schedules');
   await page.setExtraHTTPHeaders({
     'Accept': 'application/json, text/javascript, */*; q=0.01',
     'X-Requested-With': 'XMLHttpRequest'
@@ -253,7 +253,7 @@ const checkForSchedules = async (page) => {
           cooldownMode = false;
         }
         
-        logStep(`earliest slot available: ${parsedBody[0].date}`);
+        logStep(`Earliest slot available: ${parsedBody[0].date}`);
         const dates = parsedBody.map(item => parseISO(item.date));
         const [earliest] = dates.sort(compareAsc)
         return earliest;
@@ -280,7 +280,7 @@ const checkForSchedules = async (page) => {
   }
 }
 const process = async (browser) => {
-  logStep(`new attempt. ${maxTries} tries left`);
+  logStep(`New attempt. ${maxTries} tries left`);
   if (maxTries-- <= 0) {
     logStep('Reached Max tries');
 
