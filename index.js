@@ -310,6 +310,9 @@ const process = async (browser) => {
     logStep("Cooldown started");
 
     await delay(COOLDOWN_TIMEOUT);
+    if (COOLDOWN_TIMEOUT >= 1800000) {
+      isLoggedIn = false;
+    }
 
     logStep("Cooldown passed");
 
