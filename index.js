@@ -317,7 +317,7 @@ const process = async (browser) => {
 //MARK: 
 (async () => {
   var browser;
-  if (os.platform() == 'Linux') {
+  if (os.platform() == 'linux') {
      browser = await puppeteer.launch({
       executablePath: '/usr/bin/chromium-browser',
       headless: true
