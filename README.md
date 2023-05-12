@@ -23,11 +23,11 @@ $ npm start
 =====>>> Step: logging in
 =====>>> Step: checking for schedules
 Earliest: 2024-09-24
-=====>>> Step: sending an notifications: There is a slot on 2024-09-24
+=====>>> Step: sending an notification: There is a slot on 2024-09-24
 =====>>> Step: about to click the day
 =====>>> Step: The day clicked
 optionValue: 09:00
-=====>>> Step: sending an notifications for rescudule success: 2024-09-24
+=====>>> Step: sending an notification for rescudule success: 2024-09-24
 =====>>> Step: Reschedule success: 2024-09-24 
 ...
 ```

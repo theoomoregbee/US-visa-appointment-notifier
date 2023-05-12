@@ -61,21 +61,21 @@ const notifyMe = async (topic, earliestDate) => {
       subject = `Rescheduled to ${formattedDate}`;
       body = `Your new appointment date is ${formattedDate}`;
       priority = 1;
-      logStep(`sending an notifications for reschedule success: ${formattedDate}`);
+      logStep(`sending an notification for reschedule success: ${formattedDate}`);
 
       break;
     case "newSlotAvailable":
       subject = `New date available: ${formattedDate}`;
       body = `Trying to reschedule...`;
       priority = 1;
-      logStep(`sending an notifications: There is a slot on ${formattedDate}`);
+      logStep(`sending an notification: There is a slot on ${formattedDate}`);
 
       break;
     case "rescheduleFailure":
       subject = `Auto rescheduling failed`;
       body = `Try to reschedule manually ${formattedDate}`;
       priority = 0;
-      logStep(`sending an notifications for reschedule failure ${formattedDate}`);
+      logStep(`sending an notification for reschedule failure ${formattedDate}`);
 
       
       break;
@@ -88,14 +88,14 @@ const notifyMe = async (topic, earliestDate) => {
       body = `The next attempt at ${nextAttemptAt}. Polling pace decreased. I'll notify you once ban is over.`;
       priority = 0;
       
-      logStep(`sending an notifications: Cooldown started ${nextAttemptAt}`);
+      logStep(`sending an notification: Cooldown started ${nextAttemptAt}`);
 
       break;
     case "cooldownFinished":
       subject = `Cooldown mode finished`;
       body = `Polling pace is back to regular`;
       priority = 0;
-      logStep(`sending an notifications: Cooldown finished`);
+      logStep(`sending an notification: Cooldown finished`);
       break;
     default:
       // code block
@@ -253,18 +253,19 @@ const checkForSchedules = async (page) => {
           cooldownMode = false;
         }
         
-        logStep(`Earliest: ${parsedBody[0].date}`);
+        logStep(`earliest slot available: ${parsedBody[0].date}`);
         const dates = parsedBody.map(item => parseISO(item.date));
         const [earliest] = dates.sort(compareAsc)
         return earliest;
         
         
       } else {
-        logStep("No slots available, starting cooldown");
-
         isLoggedIn = false;
         if (!cooldownMode){
           await notifyMe("cooldownStarted");
+          logStep("No slots available, starting cooldown");
+        } else {
+          logStep("Still no slots available, cooldown continue");
         }
         cooldownMode = true;
         await page.close();
@@ -279,7 +280,7 @@ const checkForSchedules = async (page) => {
   }
 }
 const process = async (browser) => {
-  logStep(`starting process with ${maxTries} tries left @ ${new Date().toLocaleString()}`);
+  logStep(`new attempt. ${maxTries} tries left`);
   if (maxTries-- <= 0) {
     logStep('Reached Max tries');
 
