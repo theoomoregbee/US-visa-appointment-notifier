@@ -260,7 +260,6 @@ const checkForSchedules = async (page) => {
         
         
       } else {
-        isLoggedIn = false;
         if (!cooldownMode){
           await notifyMe("cooldownStarted");
           logStep("No slots available, starting cooldown");
