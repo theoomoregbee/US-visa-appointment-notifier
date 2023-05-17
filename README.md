@@ -52,6 +52,10 @@ copy the example configuration file exampe in `.env.example`, rename the copied 
 
 If not 'true' it only will notify you and would not attempt to reschedule if you wouldn't like it for some reason.
 
+### Acceptable window
+
+It's possible to setup a specific range of dates suitable for rescheduling by adjusting ACCEPTABLE_DATES_START and ACCEPTABLE_DATES_END variables. By default the range is set pretty wide, so if you need to it narrow down, uncomment variables by removing # chars.
+
 ### MailGun config values 
 
 You can create a free account with https://www.mailgun.com/ which should be sufficient and use the provided sandbox domain on your dashboard. The `MAILGUN_API_KEY` can be found in your Mailgun dashboard, it starts with `key-xxxxxx`. You'll need to add authorised recipients to your sandbox domain for free accounts. Please note, that emails sent from sandbox domain would likely land to the spam folder. So consider using push notifications.
@@ -59,6 +63,9 @@ You can create a free account with https://www.mailgun.com/ which should be suff
 ### PushOver config values 
 
 Create a free trial account with https://pushover.net/. Create a new app at https://pushover.net/apps/build and copy API Token/Key to PUSHOVER_TOKEN at .env. Put your user_key to PUSHOVER_USER.
+
+### Debug
+Set NODE_ENV to 'prod' when configured everything. If NODE_ENV != 'prod', there would be more verbose console logging.
 
 
 

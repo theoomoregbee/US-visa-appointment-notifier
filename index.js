@@ -23,13 +23,20 @@ const {
   MAX_NUMBER_OF_POLL,
   COOLDOWN_TIMEOUT,
   NOTIFY_ON_DATE_BEFORE_ENV,
-  RESCHEDULE_MODE
+  RESCHEDULE_MODE,
+  ACCEPTABLE_DATES_START,
+  ACCEPTABLE_DATES_END
 } = require('./config');
 var notifyOn = NOTIFY_ON_DATE_BEFORE_ENV;
 let isLoggedIn = false;
 let maxTries = MAX_NUMBER_OF_POLL
 var cooldownMode = false;
 const timeout = 5000;
+
+var DEBUG = !IS_PROD ? false : true
+
+const acceptableDatesStart = parseISO(ACCEPTABLE_DATES_START);
+const acceptableDatesEnd = parseISO(ACCEPTABLE_DATES_END);
 
 var rescheduleMode = (RESCHEDULE_MODE === 'true');
 
@@ -222,12 +229,17 @@ const reschedule = async (page, earliestDate) => {
         try {
           await delay(500);
           var confirmBtn = await page.waitForSelector(selectors.RESCHEDULE_CONFIRM_BTN);
+          if (IS_PROD) {
           await confirmBtn.click({
             offset: {
               x: 2,
               y: 2,
             },
           });
+        } else {
+          logStep(`DEV MODE: Would not confirm rescheduling in DEV mode.`);
+
+        }
         } catch (err) {
           dumpError(err);
         }
@@ -318,13 +330,24 @@ const process = async (browser) => {
   }
   const earliestDate = await checkForSchedules(page);
   if (earliestDate && isBefore(earliestDate, parseISO(notifyOn))) {
-    await notifyMe("newSlotAvailable", earliestDate);
-    if (rescheduleMode) {
-      await reschedule(page, earliestDate);
-      logStep(`Reschedule mode enabled`);
+    if (!earliestDate.isBetween(acceptableDatesStart, acceptableDatesEnd)) {
+
+      logStep("The date available IS NOT within the range you set as acceptable");
+      
     } else {
-      console.log("Reschedule mode disabled, so that's it.");
+      DEBUG && logStep("The date available IS within the range you set as acceptable");
+
+      await notifyMe("newSlotAvailable", earliestDate);
+      if (rescheduleMode) {
+        await reschedule(page, earliestDate);
+        DEBUG && logStep(`Reschedule mode enabled`);
+      } else {
+        console.log("Reschedule mode disabled, so that's it.");
+      }
+
     }
+    
+
 
   } else {
     logStep(`No earlier timeslots ¯|_(ツ)_|¯ `);
@@ -449,4 +472,17 @@ try {
   // not_defined.function_call();
 } catch (err) {
   dumpError(err);
+}
+
+Date.prototype.isBetween = isBetween
+function isBetween(minDate, maxDate) {
+  if (!this.getTime)
+    throw new Error("isBetween() was called on a non Date object")
+    
+  DEBUG && console.log("isBetween minDate: " + minDate);
+  DEBUG && console.log("isBetween maxDate: " + maxDate);
+  DEBUG && console.log("isBetween this: " + this);
+    
+    return this.getTime() >= minDate.getTime() && this.getTime() <= maxDate.getTime();
+
 }

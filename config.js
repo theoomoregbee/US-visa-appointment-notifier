@@ -48,6 +48,10 @@ module.exports = {
   MAX_NUMBER_OF_POLL: process.env.MAX_NUMBER_OF_POLL || 250, // number of polls before stopping
   COOLDOWN_TIMEOUT: process.env.COOLDOWN_TIMEOUT || 18_000_000, //5 hours
   NOTIFY_ON_DATE_BEFORE_ENV: process.env.NOTIFY_ON_DATE_BEFORE_ENV, // in ISO format i.e YYYY-MM-DD
+  
+  
+  ACCEPTABLE_DATES_START: process.env.ACCEPTABLE_DATES_START || `2020-01-01`,
+  ACCEPTABLE_DATES_END: process.env.ACCEPTABLE_DATES_END || `2050-01-01`,
 
   NOTIFY_EMAILS: process.env.NOTIFY_EMAILS, // comma separated list of emails
   mailgun: {
