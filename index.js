@@ -22,13 +22,18 @@ const {
   NEXT_SCHEDULE_POLL,
   MAX_NUMBER_OF_POLL,
   COOLDOWN_TIMEOUT,
-  NOTIFY_ON_DATE_BEFORE_ENV
+  NOTIFY_ON_DATE_BEFORE_ENV,
+  RESCHEDULE_MODE
 } = require('./config');
 var notifyOn = NOTIFY_ON_DATE_BEFORE_ENV;
 let isLoggedIn = false;
 let maxTries = MAX_NUMBER_OF_POLL
 var cooldownMode = false;
 const timeout = 5000;
+
+var rescheduleMode = (RESCHEDULE_MODE === 'true');
+
+
 const login = async (page) => {
   logStep('Logging in');
   try {
@@ -116,6 +121,7 @@ const reschedule = async (page, earliestDate) => {
   try {
     const targetPage = page;
     await page.goto(siteInfo.RESCHEDULE_URL);
+    await delay(500);
     const element = await page.waitForSelector(selectors.APPOINTMENT_DATE_FIELD, targetPage, {
       timeout,
       visible: true
@@ -127,8 +133,8 @@ const reschedule = async (page, earliestDate) => {
         y: 8.015625,
       },
     });
-    const date_picker = await page.$(selectors.APPOINTMENT_DATE_FIELD);
-    await date_picker.click();
+
+
     await page.waitForSelector(selectors.DATE_PICKER, {
       timeout: 5000
     })
@@ -162,8 +168,25 @@ const reschedule = async (page, earliestDate) => {
         nextBtn.click();
       } else {
         //If there is an available day — proceed
-        await delay(500);
+        await delay(1000);
         var theDay = await page.waitForSelector(selectors.DATE_PICKER_THE_DAY);
+
+        var dayNumber = await page.$eval(selectors.DATE_PICKER_THE_DAY, element => element.innerHTML);
+
+
+        var month = await page.$eval(selectors.DATE_PICKER_AVAILABLE_DAY, element => element.getAttribute("data-month"));
+        month++; //because they start from 0
+        var year = await page.$eval(selectors.DATE_PICKER_AVAILABLE_DAY, element => element.getAttribute("data-year"));
+
+        var pageDateString = `${year}-${month}-${dayNumber}`;
+
+        if (pageDateString === format(earliestDate, 'yyyy-MM-dd')) {
+          logStep(`Cal date is the same, everything is ok`);
+        } else {
+          logStep(`Cal date is different: ${pageDateString} vs ${format(earliestDate, 'yyyy-MM-dd')}`);
+          throw `Cal date is different: ${pageDateString} vs ${format(earliestDate, 'yyyy-MM-dd')}`;
+        }
+
         logStep("About to click the day");
         await theDay.click({
           offset: {
@@ -247,20 +270,20 @@ const checkForSchedules = async (page) => {
       throw "Failed to parse dates, probably because you are not logged in";
     } else {
       if (parsedBody.length > 0) {
-        
-        if (cooldownMode){
+
+        if (cooldownMode) {
           await notifyMe("cooldownFinished");
           cooldownMode = false;
         }
-        
+
         logStep(`Earliest slot available: ${parsedBody[0].date}`);
         const dates = parsedBody.map(item => parseISO(item.date));
         const [earliest] = dates.sort(compareAsc)
         return earliest;
-        
-        
+
+
       } else {
-        if (!cooldownMode){
+        if (!cooldownMode) {
           await notifyMe("cooldownStarted");
           logStep("No slots available, starting cooldown");
         } else {
@@ -285,18 +308,24 @@ const process = async (browser) => {
 
     return
   }
-  
+
   let page = null;
   const pages = await browser.pages();
-          page = pages.length ? pages[0] : await browser.newPage();
-  
+  page = pages.length ? pages[0] : await browser.newPage();
+
   if (!isLoggedIn) {
     isLoggedIn = await login(page);
   }
   const earliestDate = await checkForSchedules(page);
   if (earliestDate && isBefore(earliestDate, parseISO(notifyOn))) {
     await notifyMe("newSlotAvailable", earliestDate);
-    await reschedule(page, earliestDate);
+    if (rescheduleMode) {
+      await reschedule(page, earliestDate);
+      logStep(`Reschedule mode enabled`);
+    } else {
+      console.log("Reschedule mode disabled, so that's it.");
+    }
+
   } else {
     logStep(`No earlier timeslots ¯|_(ツ)_|¯ `);
 
@@ -323,14 +352,14 @@ const process = async (browser) => {
 (async () => {
   var browser;
   if (os.platform() == 'linux') {
-     browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       executablePath: '/usr/bin/chromium-browser',
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'] //This line for running as root in docker. Remove it if you run app differently
     });
   } else {
-     browser = await puppeteer.launch({
-    headless: !IS_PROD ? false : true
+    browser = await puppeteer.launch({
+      headless: !IS_PROD ? false : true
     });
   }
 

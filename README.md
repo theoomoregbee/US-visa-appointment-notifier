@@ -32,7 +32,7 @@ optionValue: 09:00
 ...
 ```
 
-![email notification sample](./email-screen-shot.png)
+![push notification sample](./push-over-success.jpg)
 
 
 ## How it works
@@ -48,9 +48,13 @@ optionValue: 09:00
 
 copy the example configuration file exampe in `.env.example`, rename the copied version to `.env` and replace the values.
 
+### Reschedule mode
+
+If not 'true' it only will notify you and would not attempt to reschedule if you wouldn't like it for some reason.
+
 ### MailGun config values 
 
-You can create a free account with https://www.mailgun.com/ which should be sufficient and use the provided sandbox domain on your dashboard. The `MAILGUN_API_KEY` can be found in your Mailgun dashboard, it starts with `key-xxxxxx`. You'll need to add authorised recipients to your sandbox domain for free accounts
+You can create a free account with https://www.mailgun.com/ which should be sufficient and use the provided sandbox domain on your dashboard. The `MAILGUN_API_KEY` can be found in your Mailgun dashboard, it starts with `key-xxxxxx`. You'll need to add authorised recipients to your sandbox domain for free accounts. Please note, that emails sent from sandbox domain would likely land to the spam folder. So consider using push notifications.
 
 ### PushOver config values 
 

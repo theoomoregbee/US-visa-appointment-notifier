@@ -43,6 +43,7 @@ module.exports = {
     
   },
   IS_PROD: process.env.NODE_ENV === 'prod',
+  RESCHEDULE_MODE: process.env.RESCHEDULE_MODE || false,
   NEXT_SCHEDULE_POLL: process.env.NEXT_SCHEDULE_POLL || 30_000, // default to 30 seconds
   MAX_NUMBER_OF_POLL: process.env.MAX_NUMBER_OF_POLL || 250, // number of polls before stopping
   COOLDOWN_TIMEOUT: process.env.COOLDOWN_TIMEOUT || 18_000_000, //5 hours
