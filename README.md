@@ -48,7 +48,7 @@ You can create a free account with https://www.mailgun.com/ which should be suff
 
 ## How to use it
 
-* clone the repo 
+* clone the repoo 
 * run `npm i` within the cloned repo directory
 * start the process with `npm start`
 

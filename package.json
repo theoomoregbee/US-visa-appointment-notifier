@@ -27,6 +27,7 @@
     "date-fns": "^2.29.2",
     "dotenv": "^16.0.1",
     "mailgun.js": "^8.0.0",
+    "node-fetch": "^2.6.12",
     "puppeteer": "^16.2.0"
   }
 }

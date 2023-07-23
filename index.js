@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const {parseISO, compareAsc, isBefore, format} = require('date-fns')
 require('dotenv').config();
 
-const {delay, sendEmail, logStep} = require('./utils');
+const {delay, sendText, logStep} = require('./utils');
 const {siteInfo, loginCred, IS_PROD, NEXT_SCHEDULE_POLL, MAX_NUMBER_OF_POLL, NOTIFY_ON_DATE_BEFORE} = require('./config');
 
 let isLoggedIn = false;
@@ -30,11 +30,11 @@ const login = async (page) => {
 }
 
 const notifyMe = async (earliestDate) => {
-  const formattedDate = format(earliestDate, 'dd-MM-yyyy');
+  const formattedDate = format(earliestDate, 'dd/MM/yyyy');
   logStep(`sending an email to schedule for ${formattedDate}`);
-  await sendEmail({
+  await sendText({
     subject: `We found an earlier date ${formattedDate}`,
-    text: `Hurry and schedule for ${formattedDate} before it is taken.`
+    text: `*${formattedDate} IS AVAILABLE*`
   })
 }
 
@@ -60,8 +60,8 @@ const checkForSchedules = async (page) => {
     }
 
     const dates =parsedBody.map(item => parseISO(item.date));
-    const [earliest] = dates.sort(compareAsc)
-
+    const [earliest] = dates.sort(compareAsc);
+    isLoggedIn = false; // this will always be false if we get to this point, bec we check every 1 hour
     return earliest;
   }catch(err){
     console.log("Unable to parse page JSON content", originalPageContent);
@@ -97,7 +97,7 @@ const process = async (browser) => {
 
 
 (async () => {
-  const browser = await puppeteer.launch(!IS_PROD ? {headless: false}: undefined);
+  const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox','--disable-setuid-sandbox']});
 
   try{
     await process(browser);

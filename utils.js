@@ -1,9 +1,5 @@
-const Mailgun = require('mailgun.js');
-const formData = require('form-data');
-
-const mailgun = new Mailgun(formData);
 const config = require('./config');
-const mg = mailgun.client({username: 'api', key: config.mailgun.API_KEY});
+const fetch = require("node-fetch");
 
 const debug = async (page, logName, saveScreenShot) => {
   if(saveScreenShot){
@@ -17,15 +13,13 @@ const debug = async (page, logName, saveScreenShot) => {
 
 const delay = timeout => new Promise(resolve => setTimeout(resolve, timeout));
 
-const sendEmail = async (params) => {
-  const data = {
-    from: 'No reply <noreply@visa-schedule-check>',
-    to: config.NOTIFY_EMAILS,
-    subject: 'Hello US VISA schedules',
-    ...params
-  };
-  await mg.messages.create(config.mailgun.DOMAIN, data)
-};
+const sendText = async (params) => {
+  const text = params.text;
+  const url = config.telegram.url + "/sendMessage?chat_id="+config.telegram.chat+"&parse_mode=MarkdownV2&text="+ encodeURIComponent(text);
+  fetch(url).then((response) => {
+    console.log("======>>> Response", response);
+  });
+}
 
 const logStep = (stepTitle) => {
   console.log("=====>>> Step:", stepTitle);
@@ -34,6 +28,6 @@ const logStep = (stepTitle) => {
 module.exports = {
   debug,
   delay,
-  sendEmail,
+  sendText,
   logStep
 }
