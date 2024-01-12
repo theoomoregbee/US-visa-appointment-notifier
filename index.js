@@ -12,6 +12,7 @@ const {
   delay,
   sendEmail,
   sendPush,
+  sendTg,
   logStep
 } = require('./utils');
 const {
@@ -112,13 +113,17 @@ const notifyMe = async (topic, earliestDate) => {
     default:
       // code block
   }
-  await sendPush({
-    subject: subject,
-    text: body,
-    priority: priority
-  })
-  await sendEmail({
-    subject: subject,
+  // await sendPush({
+  //   subject: subject,
+  //   text: body,
+  //   priority: priority
+  // })
+  // await sendEmail({
+  //   subject: subject,
+  //   text: body
+  // })
+  
+  await sendTg({
     text: body
   })
 }
@@ -184,7 +189,8 @@ const reschedule = async (page, earliestDate) => {
         var month = await page.$eval(selectors.DATE_PICKER_AVAILABLE_DAY, element => element.getAttribute("data-month"));
         month++; //because they start from 0
         var year = await page.$eval(selectors.DATE_PICKER_AVAILABLE_DAY, element => element.getAttribute("data-year"));
-
+        
+        month = month < 10 ? `0${month}` : month
         var pageDateString = `${year}-${month}-${dayNumber}`;
 
         if (pageDateString === format(earliestDate, 'yyyy-MM-dd')) {
@@ -271,6 +277,8 @@ const checkForSchedules = async (page) => {
     logStep("Error getting JSON dates object");
     dumpError(err);
   }
+  await delay(3000);
+
   const originalPageContent = await page.content();
   const bodyText = await page.evaluate(() => {
     return document.querySelector('body').innerText

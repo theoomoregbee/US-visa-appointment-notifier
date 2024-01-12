@@ -30,7 +30,9 @@ module.exports = {
     FACILITY_ID: process.env.FACILITY_ID,
 
     get APPOINTMENTS_JSON_URL(){
-      return process.env.NODE_ENV === 'prod' ?  `https://ais.usvisa-info.com/${this.COUNTRY_CODE}/niv/schedule/${this.SCHEDULE_ID}/appointment/days/${this.FACILITY_ID}.json?appointments%5Bexpedite%5D=false` : url.pathToFileURL('./test_data.json')
+      // return process.env.NODE_ENV === 'prod' ?  `https://ais.usvisa-info.com/${this.COUNTRY_CODE}/niv/schedule/${this.SCHEDULE_ID}/appointment/days/${this.FACILITY_ID}.json?appointments%5Bexpedite%5D=false` : url.pathToFileURL('./test_data.json')
+      
+      return `https://ais.usvisa-info.com/${this.COUNTRY_CODE}/niv/schedule/${this.SCHEDULE_ID}/appointment/days/${this.FACILITY_ID}.json?appointments%5Bexpedite%5D=false`
     },
 
     get LOGIN_URL () {
@@ -54,9 +56,13 @@ module.exports = {
   ACCEPTABLE_DATES_END: process.env.ACCEPTABLE_DATES_END || `2050-01-01`,
 
   NOTIFY_EMAILS: process.env.NOTIFY_EMAILS, // comma separated list of emails
+  NOTIFY_EMAILS_FROM: process.env.NOTIFY_EMAILS_FROM, // comma separated list of emails
   mailgun: {
     USERNAME: process.env.MAILGUN_USERNAME,
     DOMAIN: process.env.MAILGUN_DOMAIN,
     API_KEY: process.env.MAILGUN_API_KEY,
-  }
+  },
+  
+  TG_TOKEN: process.env.TG_TOKEN,
+  TG_CHAT_TO_NOTIFY: process.env.TG_CHAT_TO_NOTIFY
 }

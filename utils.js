@@ -2,12 +2,21 @@ const Mailgun = require('mailgun.js');
 const formData = require('form-data');
 var Push = require('pushover-notifications');
 
+var TelegramBot = require('node-telegram-bot-api');
+
+
+
 const mailgun = new Mailgun(formData);
 const config = require('./config');
 const mg = mailgun.client({
     username: 'api',
     key: config.mailgun.API_KEY
 });
+
+var tg_token = config.TG_TOKEN;
+
+var bot = new TelegramBot(tg_token, { polling: false });
+
 
 
 
@@ -56,12 +65,20 @@ const sendPush = async (params) => {
 
 };
 
+const sendTg = async (params) => {
+
+        var chatId = config.TG_CHAT_TO_NOTIFY; // Берем ID чата (не отправителя)
+       
+        await bot.sendMessage(chatId, params.text );
+ 
+};
+
 
 const sendEmail = async (params) => {
     const data = {
-        from: config.NOTIFY_EMAILS,
+        from: config.NOTIFY_EMAILS_FROM,
         to: config.NOTIFY_EMAILS,
-        subject: 'Hello US VISA schedules',
+        subject: 'US VISA schedules',
         ...params
     };
     await mg.messages.create(config.mailgun.DOMAIN, data)
@@ -76,5 +93,6 @@ module.exports = {
     delay,
     sendEmail,
     sendPush,
+    sendTg,
     logStep
 }
