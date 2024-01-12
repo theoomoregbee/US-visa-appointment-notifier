@@ -266,7 +266,9 @@ const reschedule = async (page, earliestDate) => {
   }
 }
 const checkForSchedules = async (page) => {
+
   logStep('Checking for schedules');
+
   await page.setExtraHTTPHeaders({
     'Accept': 'application/json, text/javascript, */*; q=0.01',
     'X-Requested-With': 'XMLHttpRequest'
@@ -278,6 +280,7 @@ const checkForSchedules = async (page) => {
     dumpError(err);
   }
   await delay(3000);
+
 
   const originalPageContent = await page.content();
   const bodyText = await page.evaluate(() => {
